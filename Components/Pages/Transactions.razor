@@ -1,0 +1,99 @@
+@page "/transactions"
+@using blazor_FE.Services
+@using blazor_FE.Entities
+@using Microsoft.AspNetCore.Components.QuickGrid   @* << important *@
+@inject TransactionService TransactionService
+@inject ILogger<Transactions> Logger
+
+<PageTitle>Zoznam Transakcií</PageTitle>
+
+<h1 class="text-3xl font-bold mb-6 text-gray-800">Prehľad Bankových Transakcií</h1>
+
+@if (IsLoading)
+{
+    <div>
+        <p>Loading.</p>
+    </div>
+}
+else if (ErrorMessage != null)
+{
+    <div>
+        <p>Nepodarilo sa načítať dáta z API: @ErrorMessage</p>
+    </div>
+}
+else if (_transactions == null || !_transactions.Any())
+{
+    <div>
+        <p>V databáze neboli nájdené žiadne transakcie.</p>
+    </div>
+}
+else
+{
+    <QuickGrid Items="@_transactions.AsQueryable()" 
+               Pagination="@_pagination" 
+               Class="overflow-hidden table table-striped m-0">
+
+        <PropertyColumn Property="@(t => t.TransactionId)" Title="ID"/>
+
+        <PropertyColumn Property="@(t => t.FullName)" Title="Meno klienta"/>
+
+        <TemplateColumn Title="Typ" Context="t">
+            <div>
+                <span>
+                    @t.TransactionType
+                </span>
+            </div>
+        </TemplateColumn>
+
+        <PropertyColumn Property="@(t => t.IssueDate)" Title="Dátum" Sortable="true" Format="dd.MM.yyyy HH:mm" />
+
+        <PropertyColumn Property="@(t => t.AccountNumber)" Title="Účet"/>
+
+        <PropertyColumn Property="@(t => t.BankCode)" Title="Kód banky"/>
+
+        <PropertyColumn Property="@(t => t.Amount)" Title="Suma (€)" Sortable="true"/>
+
+        <TemplateColumn Title="Akcie" Class="text-center" Context="t">
+            <a href="/transaction/@t.TransactionId" class="text-indigo-600 hover:text-indigo-900 font-medium">
+                Detail
+            </a>
+        </TemplateColumn>
+
+    </QuickGrid>
+
+    <div class="mt-4 flex justify-center">
+        <Paginator State="@_pagination" />
+    </div>
+}
+
+@code {
+    private List<Transaction>? _transactions;
+    private PaginationState _pagination = new PaginationState { ItemsPerPage = 10 };
+
+    private bool IsLoading = true;
+    private string? ErrorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            _transactions = await TransactionService.GetTransactionsAsync();
+        }
+        catch (HttpRequestException ex)
+        {
+            Logger.LogError(ex, "Chyba HTTP požiadavky pri načítaní transakcií.");
+            ErrorMessage = $"Chyba spojenía s API. Skontrolujte, či beží backend na správnej adrese. ({ex.Message})";
+            _transactions = new List<Transaction>();
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Neočakávaná chyba pri načítaní transakcií.");
+            ErrorMessage = "Nastala neočakávaná chyba.";
+            _transactions = new List<Transaction>();
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+}
