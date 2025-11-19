@@ -1,20 +1,28 @@
 @page "/transactions"
 @using blazor_FE.Services
 @using blazor_FE.Entities
-@using Microsoft.AspNetCore.Components.QuickGrid   @* << important *@
+@using Microsoft.AspNetCore.Components.QuickGrid
 @inject TransactionService TransactionService
 @inject ILogger<Transactions> Logger
+
+@rendermode InteractiveServer
 
 <PageTitle>Zoznam Transakcií</PageTitle>
 
 <h1 class="text-3xl font-bold mb-6 text-gray-800">Prehľad Bankových Transakcií</h1>
+
+<!-- Filter UI -->
+<div class="mb-4 flex items-center gap-3">
+    <label class="font-medium">Minimálna suma (€):</label>
+    <InputNumber @bind-Value="MinAmount" @onchange="OnMinAmountChanged" class="border rounded px-2 py-1 w-40" step="0.01" />
+    <button class="bg-gray-200 hover:bg-gray-300 rounded px-3 py-1" @onclick="ClearMinAmount">Zrušiť</button>
+</div>
 
 @if (IsLoading)
 {
     <div>
         <p>Loading.</p>
     </div>
-}
 else if (ErrorMessage != null)
 {
     <div>
@@ -29,11 +37,11 @@ else if (_transactions == null || !_transactions.Any())
 }
 else
 {
-    <QuickGrid Items="@_transactions.AsQueryable()" 
+    <QuickGrid Items="@FilteredTransactions.AsQueryable()" 
                Pagination="@_pagination" 
                Class="overflow-hidden table table-striped m-0">
 
-        <PropertyColumn Property="@(t => t.TransactionId)" Title="ID"/>
+        <PropertyColumn Property="@(t => t.TransactionId)" Title="ID" Sortable="true"/>
 
         <PropertyColumn Property="@(t => t.FullName)" Title="Meno klienta"/>
 
@@ -59,6 +67,7 @@ else
             </a>
         </TemplateColumn>
 
+    
     </QuickGrid>
 
     <div class="mt-4 flex justify-center">
@@ -72,6 +81,14 @@ else
 
     private bool IsLoading = true;
     private string? ErrorMessage;
+
+    // nový filter
+    private decimal? MinAmount { get; set; } = null;
+
+    // filtrované položky použité v QuickGrid
+    private IEnumerable<Transaction> FilteredTransactions =>
+        (_transactions ?? Enumerable.Empty<Transaction>())
+            .Where(t => !MinAmount.HasValue || t.Amount >= MinAmount.Value);
 
     protected override async Task OnInitializedAsync()
     {
@@ -95,5 +112,16 @@ else
         {
             IsLoading = false;
         }
+    }
+
+    private void OnMinAmountChanged()
+    {
+        StateHasChanged();
+    }
+
+    private void ClearMinAmount()
+    {
+        MinAmount = null;
+        StateHasChanged();
     }
 }

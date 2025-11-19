@@ -1,0 +1,112 @@
+@page "/transaction/{Id:int}"
+@using blazor_FE.Services
+@using blazor_FE.Entities
+@inject TransactionService TransactionService
+@inject ILogger<TransactionDetail> Logger
+
+<PageTitle>Detail transakcie</PageTitle>
+
+<h1 class="text-2xl font-semibold mb-4 text-gray-800">Detail transakcie</h1>
+
+@if (IsLoading)
+{
+    <p>Načítavam...</p>
+}
+else if (ErrorMessage != null)
+{
+    <div class="text-red-600">
+        <p>Chyba pri načítaní: @ErrorMessage</p>
+    </div>
+}
+else if (Transaction == null)
+{
+    <div>
+        <p>Transakcia s ID @Id nebola nájdená.</p>
+        <a href="/transactions" class="text-indigo-600 hover:text-indigo-900">Späť na zoznam</a>
+    </div>
+}
+else
+{
+    <div class="bg-white shadow rounded p-4">
+        <div class="mb-4">
+            <a href="/transactions" class="text-indigo-600 hover:text-indigo-900">← Späť na zoznam</a>
+        </div>
+
+        <dl class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+                <dt class="text-sm font-medium text-gray-500">ID</dt>
+                <dd class="mt-1 text-lg text-gray-900">@Transaction.TransactionId</dd>
+            </div>
+
+            <div>
+                <dt class="text-sm font-medium text-gray-500">Meno klienta</dt>
+                <dd class="mt-1 text-lg text-gray-900">@Transaction.FullName</dd>
+            </div>
+
+            <div>
+                <dt class="text-sm font-medium text-gray-500">Typ</dt>
+                <dd class="mt-1 text-lg text-gray-900">@Transaction.TransactionType</dd>
+            </div>
+
+            <div>
+                <dt class="text-sm font-medium text-gray-500">Dátum</dt>
+                <dd class="mt-1 text-lg text-gray-900">@Transaction.IssueDate.ToString("dd.MM.yyyy HH:mm")</dd>
+            </div>
+
+            <div>
+                <dt class="text-sm font-medium text-gray-500">Účet</dt>
+                <dd class="mt-1 text-lg text-gray-900">@Transaction.AccountNumber</dd>
+            </div>
+
+            <div>
+                <dt class="text-sm font-medium text-gray-500">Kód banky</dt>
+                <dd class="mt-1 text-lg text-gray-900">@Transaction.BankCode</dd>
+            </div>
+
+            <div>
+                <dt class="text-sm font-medium text-gray-500">Suma</dt>
+                <dd class="mt-1 text-lg text-gray-900">@($"{Transaction.Amount:F2} €")</dd>
+            </div>
+
+        </dl>
+
+        <div class="mt-6">
+            <a class="inline-block px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700" href="/transactions">Späť</a>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private Transaction? Transaction;
+    private bool IsLoading = true;
+    private string? ErrorMessage;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        IsLoading = true;
+        ErrorMessage = null;
+        Transaction = null;
+
+        try
+        {
+            Transaction = await TransactionService.GetTransactionByIdAsync(Id);
+        }
+        catch (HttpRequestException ex)
+        {
+            Logger.LogError(ex, "Chyba HTTP požiadavky pri načítaní detailu transakcie.");
+            ErrorMessage = $"Chyba spojenía s API. ({ex.Message})";
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Neočakávaná chyba pri načítaní detailu transakcie.");
+            ErrorMessage = "Nastala neočakávaná chyba.";
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+}

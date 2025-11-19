@@ -39,3 +39,4 @@
 /home/lucia/School/Zima 2025-2026/VVSA/blazor_FE/bin/Debug/net8.0/Microsoft.Extensions.Options.dll
 /home/lucia/School/Zima 2025-2026/VVSA/blazor_FE/bin/Debug/net8.0/Microsoft.JSInterop.dll
 /home/lucia/School/Zima 2025-2026/VVSA/blazor_FE/obj/Debug/net8.0/blazor_FE.csproj.CopyComplete
+/home/lucia/School/Zima 2025-2026/VVSA/blazor_FE/obj/Debug/net8.0/blazor_FE.sourcelink.json

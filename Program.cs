@@ -8,6 +8,7 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 builder.Services.AddScoped<TransactionService>();
+// builder.Services.
 
 builder.Services.AddHttpClient<TransactionService>(client =>
 {

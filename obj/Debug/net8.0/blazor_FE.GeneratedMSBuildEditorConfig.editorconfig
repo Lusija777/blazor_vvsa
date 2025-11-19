@@ -22,10 +22,6 @@ build_property._RazorSourceGeneratorDebug =
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9BcHAucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[/home/lucia/School/Zima 2025-2026/VVSA/blazor_FE/Components/Pages/Counter.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9QYWdlcy9Db3VudGVyLnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
 [/home/lucia/School/Zima 2025-2026/VVSA/blazor_FE/Components/Pages/Error.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9QYWdlcy9FcnJvci5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
@@ -34,12 +30,12 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9QYWdlcy9Ib21lLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[/home/lucia/School/Zima 2025-2026/VVSA/blazor_FE/Components/Pages/Transactions.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9QYWdlcy9UcmFuc2FjdGlvbnMucmF6b3I=
+[/home/lucia/School/Zima 2025-2026/VVSA/blazor_FE/Components/Pages/TransactionDetail.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9QYWdlcy9UcmFuc2FjdGlvbkRldGFpbC5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[/home/lucia/School/Zima 2025-2026/VVSA/blazor_FE/Components/Pages/Weather.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9QYWdlcy9XZWF0aGVyLnJhem9y
+[/home/lucia/School/Zima 2025-2026/VVSA/blazor_FE/Components/Pages/Transactions.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9QYWdlcy9UcmFuc2FjdGlvbnMucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
 [/home/lucia/School/Zima 2025-2026/VVSA/blazor_FE/Components/Routes.razor]

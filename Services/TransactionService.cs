@@ -30,4 +30,12 @@ public class TransactionService
 
         return await response.Content.ReadFromJsonAsync<Transaction>();
     }
+
+    public async Task<bool> UpdateTransactionAsync(Transaction transaction)
+    {
+        if (transaction == null) return false;
+
+        var response = await _httpClient.PutAsJsonAsync($"Transaction/{transaction.TransactionId}", transaction);
+        return response.IsSuccessStatusCode;
+    }
 }
